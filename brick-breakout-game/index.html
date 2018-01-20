@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Title</title>
+
+	<link rel="stylesheet" href="css/style.css">
+
+
+</head>
+<body>
+	<div class="top">
+		<div class="left">
+			<h1 class="heading">HMTL5 Brick Breakout Game</h1>
+		</div>
+		<div class="right">
+			<h1 class="settings">Short Info</h1>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+	<div class="bottom">
+		<div class="left">
+			<div class="canvas-outer">
+				<canvas id="myCanvas" width="600" height="300"></canvas>
+				<p class="game-status" id="pause">Pause</p>
+				<p class="game-status" id="play">Play</p>
+			</div>
+			<div class="btns">
+				<span id="pause" onclick="pauseGame()">Pause</span>
+				<span id="play" onclick="playGame()">Play</span>
+				<span id="clear" onclick="clearLocalStorage()">Replay</span>
+			</div>
+		</div>
+		<div class="right">
+			<div class="section">
+				<h3 class="setting-heading">Brick Types</h3>
+				<div class="brick-type normal">
+					<span class="color"></span>
+					<span class="name">Normal</span>
+				</div>
+				<div class="brick-type hard">
+					<span class="color"></span>
+					<span class="name">Hard</span>
+				</div>
+				<div class="brick-type ball-power">
+					<span class="color"></span>
+					<span class="name">Ball PowerUP</span>
+				</div>
+				<div class="brick-type paddle-power">
+					<span class="color"></span>
+					<span class="name">Paddle PowerUP</span>
+				</div>
+			</div>
+ 			<div class="section">
+				<h3 class="setting-heading">Last Five Scores</h3>
+				<table>
+					<tr>
+						<th>Player</th>
+						<th>Score</th>
+					</tr>
+					<tr>
+						<td>1</td>
+						<td id="turn1">-</td>
+					</tr>
+					<tr>
+						<td>2</td>
+						<td id="turn2">-</td>
+					</tr>
+					<tr>
+						<td>3</td>
+						<td id="turn3">-</td>
+					</tr>
+					<tr>
+						<td>4</td>
+						<td id="turn4">-</td>
+					</tr>
+					<tr>
+						<td>5</td>
+						<td id="turn5">-</td>
+					</tr>
+				</table>
+			</div>
+			<div class="credits">
+				<p>Game by Rakesh Kumar</p>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+
+	<script type="text/javascript" src="js/script.js"></script>
+</body>
+</html>
