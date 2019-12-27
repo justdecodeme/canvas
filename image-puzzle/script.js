@@ -3,7 +3,10 @@ var _ctx = _canvas.getContext('2d');
 var _file = document.getElementById('file');
 let _img = document.getElementById('img')
 
-_ctx.fillText("Drop an image onto the canvas", 240, 200);
+_ctx.font = "20px Arial";
+_ctx.fillStyle = "grey";
+_ctx.textAlign = "center";
+_ctx.fillText("Drop an image onto the canvas", _canvas.width/2, _canvas.height/2);
 
 // _file.addEventListener('change', (e) => {
 //     let src = e.target.files[0].name;
