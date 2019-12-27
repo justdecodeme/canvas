@@ -5,11 +5,11 @@ let _img = document.getElementById('img')
 
 _ctx.fillText("Drop an image onto the canvas", 240, 200);
 
-_file.addEventListener('change', (e) => {
-    let src = e.target.files[0].name;
-   _img.setAttribute('src', src)
-    loadImage();
-});
+// _file.addEventListener('change', (e) => {
+//     let src = e.target.files[0].name;
+//    _img.setAttribute('src', src)
+//     loadImage();
+// });
 
 
 function loadImage() {
