@@ -1,12 +1,17 @@
+const PUZZLE_DIFFICULTY = 4;
 var _canvas = document.getElementById('canvas');
+var _cw = _canvas.width, _ch = _canvas.height;
 var _ctx = _canvas.getContext('2d');
 var _file = document.getElementById('file');
 let _img = document.getElementById('img')
+var _pieceWidth;
+var _pieceHeight;
 
 _ctx.font = "20px Arial";
 _ctx.fillStyle = "grey";
 _ctx.textAlign = "center";
-_ctx.fillText("Drop an image onto the canvas", _canvas.width/2, _canvas.height/2);
+_ctx.fillText("Drop an image onto the canvas", _cw/2, _ch/2);
+
 
 _file.addEventListener('change', (e) => {
     let src = e.target.files[0].name;
@@ -32,11 +37,13 @@ function loadImage() {
             _img.height = _img.naturalHeight;
         }
     
-        _canvas.width = _img.width;
-        _canvas.height = _img.height;    
+        _cw = _img.width;
+        _ch = _img.height;    
+        _pieceWidth = Math.floor(_cw / PUZZLE_DIFFICULTY)
+        _pieceHeight = Math.floor(_ch / PUZZLE_DIFFICULTY)
 
-		_ctx.clearRect(0, 0, _canvas.width, _canvas.height);		
-		_ctx.drawImage(imgObj, 0, 0, _canvas.width, _canvas.height);	
+		_ctx.clearRect(0, 0, _cw, _ch);		
+		_ctx.drawImage(imgObj, 0, 0, _cw, _ch);	
     };    
     
 	imgObj.src = _img.src;    
@@ -48,6 +55,7 @@ _canvas.addEventListener("dragover", function (evt) {
     
     evt.preventDefault();
 }, false);
+
 // To enable drag and drop
 _canvas.addEventListener("dragleave", function (evt) {
     _canvas.classList.remove('active');
@@ -55,7 +63,7 @@ _canvas.addEventListener("dragleave", function (evt) {
     evt.preventDefault();
 }, false);
 
-// Handle dropped image file - only Firefox and Google Chrome
+// Handle dropped image file
 _canvas.addEventListener("drop", function (evt) {
     _canvas.classList.remove('active');
     
