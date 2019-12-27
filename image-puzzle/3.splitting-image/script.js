@@ -37,10 +37,12 @@ function loadImage() {
             _img.height = _img.naturalHeight;
         }
     
-        _cw = _img.width;
-        _ch = _img.height;    
+        _cw = _canvas.width = _img.width;
+        _ch = _canvas.height = _img.height;    
+
         _pieceWidth = Math.floor(_cw / PUZZLE_DIFFICULTY)
         _pieceHeight = Math.floor(_ch / PUZZLE_DIFFICULTY)
+        console.log(_pieceWidth, _pieceHeight)
 
 		_ctx.clearRect(0, 0, _cw, _ch);		
 		_ctx.drawImage(imgObj, 0, 0, _cw, _ch);	
