@@ -1,40 +1,52 @@
+/*************************/
+/* variables */
+/*************************/
 var canvas = document.getElementById('canvas');
-var ctx = canvas.getContext('2d');
-var file = document.getElementById('file');
-let img = document.getElementById('img')
-
 var cw = canvas.width;
 var ch = canvas.height;
 
+var ctx = canvas.getContext('2d');
+// draw text in center if no image is loaded
 ctx.font = "20px Arial";
 ctx.fillStyle = "grey";
 ctx.textAlign = "center";
 ctx.fillText("Drop an image onto the canvas", cw/2, ch/2);
 
+var file = document.getElementById('file');
+let img = document.getElementById('img')
 
 var tileCount = 3;
 var tileWidth;
 var tileHeight;
 
+// location of click 
 var clickLoc = new Object;
 clickLoc.x = 0;
 clickLoc.y = 0;
 
+// location of empty cell
 var emptyLoc = new Object;
 emptyLoc.x = 0;
 emptyLoc.y = 0;
 
+// flag for game state
 var solved = false;
 
 var boardParts;
 var imgLoaded;
 
+
+/*************************/
+/* event listeners */
+/*************************/
+// detect if image is loaded through button
 file.addEventListener("change", function (e) {
    let src = e.target.files[0].name;
    img.setAttribute('src', src)
    loadImage();
 });
 
+// detect click on canvas
 canvas.addEventListener("click", function (e) {
     clickLoc.x = Math.floor((e.pageX - this.offsetLeft) / tileWidth);
     clickLoc.y = Math.floor((e.pageY - this.offsetTop) / tileHeight);
@@ -50,21 +62,21 @@ canvas.addEventListener("click", function (e) {
     }
 });
 
-// To enable drag and drop
+// check if mouse is over the canvas
 canvas.addEventListener("dragover", function (evt) {
     canvas.classList.add('active');
     
     evt.preventDefault();
 }, false);
 
-// To enable drag and drop
+// check if mouse leave the canvas
 canvas.addEventListener("dragleave", function (evt) {
     canvas.classList.remove('active');
 
     evt.preventDefault();
 }, false);
 
-// Handle dropped image file
+// handle dropped image file
 canvas.addEventListener("drop", function (evt) {
     canvas.classList.remove('active');
     
@@ -86,6 +98,10 @@ canvas.addEventListener("drop", function (evt) {
 }, false);
 
 
+/*************************/
+/* functions */
+/*************************/
+// load image and calculate canvas width and height as per image dimensions
 function loadImage() {
 	var imgObj = new Image();
 
@@ -108,17 +124,16 @@ function loadImage() {
         tileWidth = cw / tileCount;
         tileHeight = ch / tileCount;
 
-        // ctx.drawImage(imgObj, 0, 0, cw, ch);	
         setBoard();
-        drawTiles(imgObj);
-        setTimeout(() => {
-        }, 1000);
-
+        // setTimeout(() => {
+            drawTiles(imgObj);
+        // }, 1000);
     };    
     
 	imgObj.src = img.src;    
 }
 
+// set board object to save the state of the game
 function setBoard() {
     boardParts = new Array(tileCount);
     for (var i = 0; i < tileCount; ++i) {
@@ -142,73 +157,7 @@ function setBoard() {
     solved = false;
 }
 
-function initTiles() {
-    var i = tileCount * tileCount - 1;
-    while (i > 0) {
-        var j = Math.floor(Math.random() * i);
-        var xi = i % tileCount;
-        var yi = Math.floor(i / tileCount);
-        var xj = j % tileCount;
-        var yj = Math.floor(j / tileCount);
-        swapTiles(xi, yi, xj, yj);
-        --i;
-    }
-
-}
-
-function swapTiles(i, j, k, l) {
-    var temp = new Object();
-    temp = boardParts[i][j];
-    boardParts[i][j] = boardParts[k][l];
-    boardParts[k][l] = temp;
-}
-
-function isSolvable(width, height, emptyRow) {
-    if (width % 2 == 1) {
-        return (sumInversions() % 2 == 0)
-    } else {
-        return ((sumInversions() + height - emptyRow) % 2 == 0)
-    }
-}
-
-function sumInversions() {
-    var inversions = 0;
-    for (var j = 0; j < tileCount; ++j) {
-        for (var i = 0; i < tileCount; ++i) {
-            inversions += countInversions(i, j);
-        }
-    }
-    return inversions;
-}
-
-function countInversions(i, j) {
-    var inversions = 0;
-    var tileNum = j * tileCount + i;
-    var lastTile = tileCount * tileCount;
-    var tileValue = boardParts[i][j].y * tileCount + boardParts[i][j].x;
-    for (var q = tileNum + 1; q < lastTile; ++q) {
-        var k = q % tileCount;
-        var l = Math.floor(q / tileCount);
-
-        var compValue = boardParts[k][l].y * tileCount + boardParts[k][l].x;
-        if (tileValue > compValue && tileValue != (lastTile - 1)) {
-            ++inversions;
-        }
-    }
-    return inversions;
-}
-
-function initEmpty() {
-    for (var j = 0; j < tileCount; ++j) {
-        for (var i = 0; i < tileCount; ++i) {
-            if (boardParts[i][j].x == tileCount - 1 && boardParts[i][j].y == tileCount - 1) {
-                emptyLoc.x = i;
-                emptyLoc.y = j;
-            }
-        }
-    }
-}
-
+// draw the image tile over the canvas
 function drawTiles(img) {
     imgLoaded = img;
     ctx.clearRect(0, 0, cw, ch);
@@ -238,10 +187,12 @@ function drawTiles(img) {
     }
 }
 
+// calculate the distance between clicked tile and empty tile
 function distance(x1, y1, x2, y2) {
     return Math.abs(x1 - x2) + Math.abs(y1 - y2);
 }
 
+// slide the clicked tile to empty loaction
 function slideTile(toLoc, fromLoc) {
     if (!solved) {
         boardParts[toLoc.x][toLoc.y].x = boardParts[fromLoc.x][fromLoc.y].x;
@@ -254,6 +205,7 @@ function slideTile(toLoc, fromLoc) {
     }
 }
 
+// check if puzzle is solved or not
 function checkSolved() {
     var flag = true;
     for (var i = 0; i < tileCount; ++i) {
@@ -264,4 +216,70 @@ function checkSolved() {
         }
     }
     solved = flag;
+}
+
+
+/***********************************/
+/* generate random tiles algoriths */
+/***********************************/
+function initTiles() {
+    var i = tileCount * tileCount - 1;
+    while (i > 0) {
+        var j = Math.floor(Math.random() * i);
+        var xi = i % tileCount;
+        var yi = Math.floor(i / tileCount);
+        var xj = j % tileCount;
+        var yj = Math.floor(j / tileCount);
+        swapTiles(xi, yi, xj, yj);
+        --i;
+    }
+
+}
+function swapTiles(i, j, k, l) {
+    var temp = new Object();
+    temp = boardParts[i][j];
+    boardParts[i][j] = boardParts[k][l];
+    boardParts[k][l] = temp;
+}
+function isSolvable(width, height, emptyRow) {
+    if (width % 2 == 1) {
+        return (sumInversions() % 2 == 0)
+    } else {
+        return ((sumInversions() + height - emptyRow) % 2 == 0)
+    }
+}
+function sumInversions() {
+    var inversions = 0;
+    for (var j = 0; j < tileCount; ++j) {
+        for (var i = 0; i < tileCount; ++i) {
+            inversions += countInversions(i, j);
+        }
+    }
+    return inversions;
+}
+function countInversions(i, j) {
+    var inversions = 0;
+    var tileNum = j * tileCount + i;
+    var lastTile = tileCount * tileCount;
+    var tileValue = boardParts[i][j].y * tileCount + boardParts[i][j].x;
+    for (var q = tileNum + 1; q < lastTile; ++q) {
+        var k = q % tileCount;
+        var l = Math.floor(q / tileCount);
+
+        var compValue = boardParts[k][l].y * tileCount + boardParts[k][l].x;
+        if (tileValue > compValue && tileValue != (lastTile - 1)) {
+            ++inversions;
+        }
+    }
+    return inversions;
+}
+function initEmpty() {
+    for (var j = 0; j < tileCount; ++j) {
+        for (var i = 0; i < tileCount; ++i) {
+            if (boardParts[i][j].x == tileCount - 1 && boardParts[i][j].y == tileCount - 1) {
+                emptyLoc.x = i;
+                emptyLoc.y = j;
+            }
+        }
+    }
 }
