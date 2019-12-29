@@ -161,7 +161,7 @@ function setBoard() {
 function drawTiles(img) {
     imgLoaded = img;
     ctx.clearRect(0, 0, cw, ch);
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 2;
     ctx.strokeStyle = "#fff";
 
     for (var i = 0; i < tileCount; ++i) {
