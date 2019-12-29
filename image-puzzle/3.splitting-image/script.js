@@ -136,18 +136,22 @@ function drawTiles(img) {
     for (var r = 0; r < tileCount; ++r) {
         // console.log('row:...', r)
         for (var c = 0; c < tileCount; ++c) {
-            var x = boardParts[r][c].r;
-            var y = boardParts[r][c].c;
+            var x = boardParts[r][c].c;
+            var y = boardParts[r][c].r;
             let sx = x * tileSize;
             let sy = y * tileSize;
             let sWidth = tileSize;
             let sHeight = tileSize;
-            let dx = r * tileSize;
-            let dy = c * tileSize;
+            let dx = c * tileSize;
+            let dy = r * tileSize;
             let dWidth = tileSize;
             let dHeight = tileSize;
+            // sy = dx = 200;
+            // sx = dy = 0;
+            console.log(sx, sy, dx, dy);
             if (r != emptyLoc.r || c != emptyLoc.c || solved == true) {
-                // console.log(sx, sy, dx, dy);
+                // _ctx.drawImage(imgLoaded, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+                // if(r == 0)
                 _ctx.drawImage(imgLoaded, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
             }
             _ctx.strokeRect(dx, dy, dWidth, dHeight);
@@ -156,8 +160,8 @@ function drawTiles(img) {
 }
 
 _canvas.onclick = function (e) {
-    clickLoc.c = Math.floor((e.pageY - this.offsetTop) / tileSize);
-    clickLoc.r = Math.floor((e.pageX - this.offsetLeft) / tileSize);
+    clickLoc.r = Math.floor((e.pageY - this.offsetTop) / tileSize);
+    clickLoc.c = Math.floor((e.pageX - this.offsetLeft) / tileSize);
     // console.log(clickLoc.r, clickLoc.c, distance(clickLoc.r, clickLoc.c, emptyLoc.r, emptyLoc.c))
     if (distance(clickLoc.r, clickLoc.c, emptyLoc.r, emptyLoc.c) == 1) {
         slideTile(emptyLoc, clickLoc);
@@ -198,7 +202,4 @@ function checkSolved() {
         }
     }
     solved = flag;
-    if(solved) {
-        console.log('solved')
-    }
 }
