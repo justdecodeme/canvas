@@ -13,7 +13,16 @@ ctx.textAlign = "center";
 ctx.fillText("Drop an image onto the canvas", cw/2, ch/2);
 
 var file = document.getElementById('file');
-let img = document.getElementById('img')
+let img = document.getElementById('img');
+var audio = document.getElementById("audio");
+
+// sounds to play
+var sounds = {
+    'click': 'click.wav',
+    'disable': 'disable.wav',
+    'win': 'win.wav'
+}
+
 
 var tileCount = 3;
 var tileWidth;
@@ -52,13 +61,17 @@ canvas.addEventListener("click", function (e) {
     clickLoc.y = Math.floor((e.pageY - this.offsetTop) / tileHeight);
 
     if (distance(clickLoc.x, clickLoc.y, emptyLoc.x, emptyLoc.y) == 1) {
+        playAudio(sounds.click);
         slideTile(emptyLoc, clickLoc);
         drawTiles(imgLoaded);
+    } else {
+        playAudio(sounds.disable);
     }
     if (solved) {
+        playAudio(sounds.win);
         setTimeout(function () {
             alert("You solved it!");
-        }, 500);
+        }, 1000);
     }
 });
 
@@ -216,6 +229,25 @@ function checkSolved() {
         }
     }
     solved = flag;
+}
+
+// play sound effect
+function playAudio(src) {
+    // var a = new Audio(src);
+    audio.src = src;
+    // Show loading animation.
+    var playPromise = audio.play();
+
+    if (playPromise !== undefined) {
+        playPromise.then(_ => {
+        // Automatic playback started!
+        // Show playing UI.
+        })
+        .catch(error => {
+        // Auto-play was prevented
+        // Show paused UI.
+        });
+    }    
 }
 
 

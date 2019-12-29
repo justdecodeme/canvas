@@ -3,6 +3,7 @@
 /* ************ */
 * {
     box-sizing: border-box;
+    user-select: none;
 }
 
 /* ************ */
@@ -33,5 +34,12 @@ canvas.active {
 /* image */
 /* ************ */
 img {
+    display: none;
+}
+
+/* ************ */
+/* audio */
+/* ************ */
+audio {
     display: none;
 }
