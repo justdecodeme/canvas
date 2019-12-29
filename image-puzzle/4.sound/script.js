@@ -13,7 +13,8 @@ ctx.fillText("Drop an image onto the canvas", cw/2, ch/2);
 
 
 var tileCount = 3;
-var tileSize;
+var tileWidth;
+var tileHeight;
 
 var clickLoc = new Object;
 clickLoc.x = 0;
@@ -28,26 +29,62 @@ var solved = false;
 var boardParts;
 var imgLoaded;
 
-file.onchange = function(e) {
+file.addEventListener("change", function (e) {
    let src = e.target.files[0].name;
    img.setAttribute('src', src)
    loadImage();
-};
+});
 
-canvas.onclick = function (e) {
-    clickLoc.x = Math.floor((e.pageX - this.offsetLeft) / tileSize);
-    clickLoc.y = Math.floor((e.pageY - this.offsetTop) / tileSize);
+canvas.addEventListener("click", function (e) {
+    clickLoc.x = Math.floor((e.pageX - this.offsetLeft) / tileWidth);
+    clickLoc.y = Math.floor((e.pageY - this.offsetTop) / tileHeight);
 
     if (distance(clickLoc.x, clickLoc.y, emptyLoc.x, emptyLoc.y) == 1) {
         slideTile(emptyLoc, clickLoc);
-        drawTiles();
+        drawTiles(imgLoaded);
     }
     if (solved) {
         setTimeout(function () {
             alert("You solved it!");
         }, 500);
     }
-};
+});
+
+// To enable drag and drop
+canvas.addEventListener("dragover", function (evt) {
+    canvas.classList.add('active');
+    
+    evt.preventDefault();
+}, false);
+
+// To enable drag and drop
+canvas.addEventListener("dragleave", function (evt) {
+    canvas.classList.remove('active');
+
+    evt.preventDefault();
+}, false);
+
+// Handle dropped image file
+canvas.addEventListener("drop", function (evt) {
+    canvas.classList.remove('active');
+    
+    var files = evt.dataTransfer.files;
+
+    if (files.length > 0) {
+        var file = files[0];
+        if (typeof FileReader !== "undefined" && file.type.indexOf("image") != -1) {
+            var reader = new FileReader();
+            // Note: addEventListener doesn't work in Google Chrome for this event
+            reader.onload = function (evt) {
+                img.src = evt.target.result;
+                loadImage();
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    evt.preventDefault();
+}, false);
+
 
 function loadImage() {
 	var imgObj = new Image();
@@ -68,7 +105,8 @@ function loadImage() {
     
         cw = canvas.width = img.width;
         ch = canvas.height = img.height;    
-        tileSize = cw / tileCount
+        tileWidth = cw / tileCount;
+        tileHeight = ch / tileCount;
 
         // ctx.drawImage(imgObj, 0, 0, cw, ch);	
         setBoard();
@@ -171,15 +209,30 @@ function initEmpty() {
     }
 }
 
-function drawTiles() {
+function drawTiles(img) {
+    imgLoaded = img;
     ctx.clearRect(0, 0, cw, ch);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#fff";
+
     for (var i = 0; i < tileCount; ++i) {
         for (var j = 0; j < tileCount; ++j) {
             var x = boardParts[i][j].x;
             var y = boardParts[i][j].y;
+
+            let sx = x * tileWidth;
+            let sy = y * tileHeight;
+            let sWidth = tileWidth;
+            let sHeight = tileHeight;
+            let dx = i * tileWidth;
+            let dy = j * tileHeight;
+            let dWidth = tileWidth;
+            let dHeight = tileHeight;
+            
+            ctx.strokeRect(dx, dy, dWidth, dHeight);
+
             if (i != emptyLoc.x || j != emptyLoc.y || solved == true) {
-                ctx.drawImage(img, x * tileSize, y * tileSize, tileSize, tileSize,
-                    i * tileSize, j * tileSize, tileSize, tileSize);
+                ctx.drawImage(imgLoaded, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
             }
         }
     }

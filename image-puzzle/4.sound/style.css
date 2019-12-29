@@ -10,10 +10,10 @@ h1 span {
 }
 
 canvas {
-    background: orange;
+    /* background: orange; */
     margin: 0 auto;
     display: block;
-    border-bottom: 1px solid black;
+    border: 1px solid black;
 }
 canvas.active {
     border: 4px dotted black;
