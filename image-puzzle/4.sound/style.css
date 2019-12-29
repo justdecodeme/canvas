@@ -1,7 +1,13 @@
+/* ************ */
+/* common */
+/* ************ */
 * {
     box-sizing: border-box;
 }
 
+/* ************ */
+/* heading */
+/* ************ */
 h1 {
     text-align: center;
 }
@@ -9,6 +15,9 @@ h1 span {
     font-size: 50%;
 }
 
+/* ************ */
+/* canvas */
+/* ************ */
 canvas {
     /* background: orange; */
     margin: 0 auto;
@@ -20,6 +29,9 @@ canvas.active {
     opacity: .6;    
 }
 
+/* ************ */
+/* image */
+/* ************ */
 img {
     display: none;
 }
