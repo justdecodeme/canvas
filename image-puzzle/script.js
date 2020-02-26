@@ -57,6 +57,7 @@ file.addEventListener("change", function (e) {
 
 // detect click on canvas
 canvas.addEventListener("click", function (e) {
+
     clickLoc.x = Math.floor((e.pageX - this.offsetLeft) / tileWidth);
     clickLoc.y = Math.floor((e.pageY - this.offsetTop) / tileHeight);
 
@@ -148,7 +149,7 @@ function loadImage() {
 
 // set board object to save the state of the game
 function setBoard() {
-    boardParts = new Array(tileCount);
+    boardParts = new Array(tileCount); 
     for (var i = 0; i < tileCount; ++i) {
         boardParts[i] = new Array(tileCount);
         for (var j = 0; j < tileCount; ++j) {
@@ -171,7 +172,7 @@ function setBoard() {
 }
 
 // draw the image tile over the canvas
-function drawTiles(img) {
+function drawTiles(img) { 
     imgLoaded = img;
     ctx.clearRect(0, 0, cw, ch);
     ctx.lineWidth = 2;
@@ -192,6 +193,7 @@ function drawTiles(img) {
             let dHeight = tileHeight;
             
             ctx.strokeRect(dx, dy, dWidth, dHeight);
+            // console.log(sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
 
             if (i != emptyLoc.x || j != emptyLoc.y || solved == true) {
                 ctx.drawImage(imgLoaded, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
@@ -202,18 +204,27 @@ function drawTiles(img) {
 
 // calculate the distance between clicked tile and empty tile
 function distance(x1, y1, x2, y2) {
+    console.log(Math.abs(x1 - x2) + Math.abs(y1 - y2));
     return Math.abs(x1 - x2) + Math.abs(y1 - y2);
 }
 
 // slide the clicked tile to empty loaction
-function slideTile(toLoc, fromLoc) {
+function slideTile(emptyLoc, clickLoc) {
     if (!solved) {
-        boardParts[toLoc.x][toLoc.y].x = boardParts[fromLoc.x][fromLoc.y].x;
-        boardParts[toLoc.x][toLoc.y].y = boardParts[fromLoc.x][fromLoc.y].y;
-        boardParts[fromLoc.x][fromLoc.y].x = tileCount - 1;
-        boardParts[fromLoc.x][fromLoc.y].y = tileCount - 1;
-        toLoc.x = fromLoc.x;
-        toLoc.y = fromLoc.y;
+        // swapping 
+        boardParts[emptyLoc.x][emptyLoc.y].x = boardParts[clickLoc.x][clickLoc.y].x;
+        boardParts[emptyLoc.x][emptyLoc.y].y = boardParts[clickLoc.x][clickLoc.y].y;
+
+        
+        // 9 number is missing, so puzzle is not possible to finish if we don't click last tile (2,2).
+        // that's why after SWAPPING we are updating clicked position to last tile since we can't slide last tile any way.
+        boardParts[clickLoc.x][clickLoc.y].x = tileCount - 1; // 2
+        boardParts[clickLoc.x][clickLoc.y].y = tileCount - 1; // 2
+
+        // updating empty location to clicked location
+        emptyLoc.x = clickLoc.x; 
+        emptyLoc.y = clickLoc.y;  
+        
         checkSolved();
     }
 }
